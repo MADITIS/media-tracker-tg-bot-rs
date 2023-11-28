@@ -1,5 +1,5 @@
 
-use teloxide::{prelude::*, utils::command::BotCommands};
+use teloxide::{prelude::*, utils::command::BotCommands, types};
 use dotenv::dotenv;
 use std::{env::{self, VarError}, process};
 
@@ -32,12 +32,22 @@ impl BotConfig {
         // for id in chat_id {
         //     bot.send_message(ChatId(id), "Bot Started").send().await;
         // }
-        teloxide::repl(bot, |bot: Bot, msg: Message| async move {
-            bot.send_message(msg.chat.id, format!("{}", msg.chat.id)).await?;
-            Ok(())
-        })
-        .await;
+        Command::repl(bot, BotConfig::answer).await;
     }
 
+    async fn answer(bot: Bot, msg: Message, cmd: Command) -> ResponseResult<()> {
+        match cmd {
+            Command::Start => bot.send_message(msg.chat.id, "<b>Yes, I am alive.</b>").reply_to_message_id(msg.id).parse_mode(types::ParseMode::Html).await?,
+        };
+
+        Ok(())
     }
 
+}
+
+    #[derive(BotCommands, Clone)]
+    #[command(rename_rule = "lowercase", description = "These commands are supported:")]
+    pub enum Command {
+        #[command(description = "show the status.")]
+        Start,
+    }
