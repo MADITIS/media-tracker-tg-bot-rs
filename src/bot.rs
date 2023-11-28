@@ -28,10 +28,6 @@ impl BotConfig {
         let bot = Bot::new(bot_token);
         log::info!("Starting bot...");
 
-        // let chat_id: [i64; 2] = [-1001190551289, 767750661];
-        // for id in chat_id {
-        //     bot.send_message(ChatId(id), "Bot Started").send().await;
-        // }
         Command::repl(bot, BotConfig::answer).await;
     }
 
